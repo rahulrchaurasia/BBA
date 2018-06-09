@@ -20,4 +20,6 @@ public interface IRegister {
 
     void  SaveRegister(RegisterEnity entity, IResponseSubcriber iResponseSubcriber);
 
+    void getFollowupHistory(String userid, IResponseSubcriber iResponseSubcriber);
+
 }

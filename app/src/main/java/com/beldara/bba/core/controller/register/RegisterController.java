@@ -5,6 +5,7 @@ import android.content.Context;
 import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.model.RegisterEnity;
 import com.beldara.bba.core.requestbuilder.RegisterRequestBuilder;
+import com.beldara.bba.core.response.FollowUpHistoryResponse;
 import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.core.response.RegisterResponse;
@@ -244,6 +245,52 @@ public class RegisterController implements IRegister {
 
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                if (t instanceof ConnectException) {
+                    iResponseSubcriber.OnFailure(t);
+                } else if (t instanceof SocketTimeoutException) {
+                    iResponseSubcriber.OnFailure(new RuntimeException("Check your internet connection"));
+                } else if (t instanceof UnknownHostException) {
+                    iResponseSubcriber.OnFailure(new RuntimeException("Check your internet connection"));
+                } else if (t instanceof NumberFormatException) {
+                    iResponseSubcriber.OnFailure(new RuntimeException("Unexpected server response"));
+                } else {
+                    iResponseSubcriber.OnFailure(new RuntimeException(t.getMessage()));
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void getFollowupHistory(String userid, final IResponseSubcriber iResponseSubcriber) {
+
+        HashMap<String, String> body = new HashMap<>();
+
+        body.put("userid", userid);
+        registerQuotesNetworkService.getFollowupHistory(body).enqueue(new Callback<FollowUpHistoryResponse>() {
+            @Override
+            public void onResponse(Call<FollowUpHistoryResponse> call, Response<FollowUpHistoryResponse> response) {
+                if (response.body() != null) {
+
+                    //callback of data
+                    if (response.body().getStatusId() == 1) {
+
+                        iResponseSubcriber.OnSuccess(response.body(), response.body().getMessage());
+                    } else {
+                        //failure
+                        iResponseSubcriber.OnFailure(new RuntimeException((response.body().getMessage())));
+                    }
+
+
+
+                } else {
+                    //failure
+                    iResponseSubcriber.OnFailure(new RuntimeException("Enable to reach server, Try again later"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FollowUpHistoryResponse> call, Throwable t) {
                 if (t instanceof ConnectException) {
                     iResponseSubcriber.OnFailure(t);
                 } else if (t instanceof SocketTimeoutException) {

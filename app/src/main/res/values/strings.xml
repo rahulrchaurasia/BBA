@@ -9,6 +9,7 @@
     <string name="title_activity_home">Home</string>
     <string name="title_activity_lead">Lead</string>
     <string name="title_activity_Register">Register</string>
+    <string name="title_FollowUpHistoryActivity">Follow Up History</string>
 
 
 </resources>

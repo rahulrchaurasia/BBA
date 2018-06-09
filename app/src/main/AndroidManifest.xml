@@ -59,11 +59,23 @@
         <activity
             android:name=".lead.LeadActivity"
             android:label="@string/title_activity_lead"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/title_activity_Register"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
+
+        <activity
+            android:name=".FollowUpHistory.FollowUpHistoryActivity"
+            android:label="@string/title_FollowUpHistoryActivity"
+            android:theme="@style/AppTheme" >
+
+
+        </activity>
+
+
+
     </application>
 
 </manifest>
