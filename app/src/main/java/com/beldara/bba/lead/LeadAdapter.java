@@ -1,6 +1,7 @@
 package com.beldara.bba.lead;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beldara.bba.R;
+import com.beldara.bba.core.model.FollowUpHistoryEntity;
 import com.beldara.bba.core.model.LeadEntity;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
     public class LeadItem extends RecyclerView.ViewHolder
     {
         public TextView txtName, txtMobile, txtCategory,txtEmailID ,txtContPerson;
-        public LinearLayout lyCalling,lyEdit;
+        public LinearLayout lyCalling,lyEdit,lyHistory;
         Button btnAssignee;
 
         public LeadItem(View itemView) {
@@ -46,6 +48,7 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
             txtCategory = (TextView) itemView.findViewById(R.id.txtCategory);
             lyCalling = (LinearLayout) itemView.findViewById(R.id.lyCalling);
             lyEdit = (LinearLayout) itemView.findViewById(R.id.lyEdit);
+            lyHistory = (LinearLayout) itemView.findViewById(R.id.lyHistory);
             btnAssignee = (Button) itemView.findViewById(R.id.btnAssignee);
 
         }
@@ -70,10 +73,13 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
         {
             holder.lyCalling.setVisibility(View.VISIBLE);
             holder.lyEdit.setVisibility(View.VISIBLE);
+            holder.lyHistory.setVisibility(View.VISIBLE);
+
             holder.btnAssignee.setVisibility(View.GONE);
         }else{
             holder.lyCalling.setVisibility(View.GONE);
             holder.lyEdit.setVisibility(View.GONE);
+            holder.lyHistory.setVisibility(View.GONE);
             holder.btnAssignee.setVisibility(View.VISIBLE);
         }
         holder.txtName.setText("" + leadEntity.getCompany());
@@ -86,6 +92,13 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
             @Override
             public void onClick(View view) {
                 ((LeadActivity) mContext).dialCall(leadEntity.getMobile(), leadEntity);
+            }
+        });
+
+        holder.lyHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((LeadActivity) mContext).redirectQuotefollowup(leadEntity.getSellerid());
             }
         });
 

@@ -21,10 +21,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.beldara.bba.BaseActivity;
+import com.beldara.bba.FollowUpHistory.FollowUpHistoryActivity;
 import com.beldara.bba.R;
 import com.beldara.bba.core.APIResponse;
 import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.controller.register.RegisterController;
+import com.beldara.bba.core.model.FollowUpHistoryEntity;
 import com.beldara.bba.core.model.LeadEntity;
 import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
@@ -40,7 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
-
+    public static final String FROM_ID = "id_from_quote";
     TelephonyManager telephonyManager;
     PhoneStateListener callStateListener;
   //  AudioRecorder audioRecorder;
@@ -212,5 +214,12 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
             }
             startActivity(intent);
         }
+    }
+
+    public void redirectQuotefollowup(String sellerid) {
+        Intent intent = new Intent(LeadActivity.this, FollowUpHistoryActivity.class);
+        intent.putExtra(FROM_ID, sellerid);
+        startActivity(intent);
+
     }
 }
