@@ -171,7 +171,7 @@
                     android:layout_weight="20"
                     android:gravity="center_horizontal"
                     android:padding="15dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/pic1"
@@ -243,7 +243,7 @@
                     android:layout_weight="20"
                     android:gravity="center_horizontal"
                     android:padding="15dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imgEdit"
@@ -254,6 +254,14 @@
 
                 </LinearLayout>
             </LinearLayout>
+            
+            <Button
+                android:id="@+id/btnAssignee"
+                style="@style/ButtonStyle"
+                android:layout_width="match_parent"
+                android:text="assigned To Me"
+              android:visibility="gone"
+                android:layout_height="wrap_content" />
 
             <!--<View-->
             <!--android:layout_width="match_parent"-->

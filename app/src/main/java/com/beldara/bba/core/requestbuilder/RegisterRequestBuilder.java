@@ -46,7 +46,13 @@ public class RegisterRequestBuilder extends RetroRequestBuilder {
         @POST("/kapi.php?m=R")
         Call<RegisterResponse> SaveRegister(@Body RegisterEnity bodyParameter);
 
+        //FollowUp
         @POST("/kapi.php?m=FH")
         Call<FollowUpHistoryResponse> getFollowupHistory(@Body HashMap<String, String> body);
+
+        @POST("/kapi.php?m=FM")
+        Call<FollowUpHistoryResponse> getFollowupMaster();
+
+
     }
 }
