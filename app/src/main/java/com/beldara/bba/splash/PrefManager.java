@@ -22,8 +22,11 @@ public class PrefManager {
 
     private static final String IS_PRODUCT_MASTER_UPDATE = "isProductMasterUpdate";
 
-    private static final String MOBILE = "ELITE_CUSTOMER_MOBILE";
-    private static final String PASSWORD = "ELITE_CUSTOMER_PASSWORD";
+    private static final String USER = "BBA_USER";
+    private static final String PASSWORD = "BBA__PASSWORD";
+    private static final String USER_ID = "BBA_USER_ID";
+    private static final String BBA_TYPE = "BBA_TYPE";
+    public static String CALL_STATUS = "callstatus";
 
 
     public PrefManager(Context context) {
@@ -44,16 +47,42 @@ public class PrefManager {
     }
 
    
-    public  void setMobile(String mob)
+    public  void setUser(String user)
     {
-        editor.putString(MOBILE, mob);
+        editor.putString(USER, user);
 
         editor.commit();
     }
 
-    public String getMobile() {
-        return pref.getString(MOBILE, "");
+    public String getUser() {
+        return pref.getString(USER, "");
     }
+
+
+
+
+    public  void setUserID(String userId)
+    {
+        editor.putString(USER_ID, userId);
+
+        editor.commit();
+    }
+
+    public String getUserID() {
+        return pref.getString(USER_ID, "");
+    }
+
+    public  void setType(String type)
+    {
+        editor.putString(BBA_TYPE, type);
+
+        editor.commit();
+    }
+
+    public String getType() {
+        return pref.getString(BBA_TYPE, "");
+    }
+
 
     public  void setPassword(String pwd)
     {
@@ -64,6 +93,17 @@ public class PrefManager {
 
     public String getPassword() {
         return pref.getString(PASSWORD, "");
+    }
+
+    public  void setCallStatus(String callStatus)
+    {
+
+        editor.putString(CALL_STATUS, callStatus);
+        editor.commit();
+    }
+
+    public String getCallStatus() {
+        return pref.getString(CALL_STATUS, "");
     }
 
 

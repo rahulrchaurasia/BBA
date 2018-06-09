@@ -32,6 +32,7 @@
     <color name="buttonBackground">#ee5e35</color>
     <color name="red_descent">#de6d75</color>
     <color name="green_descent">#42ceb2</color>
+    <color name="orange_descent">#f07d00</color>
     <color name="offer_info_white">#DDFFFFFF</color>
     <color name="alpha_white">#26ffffff</color>
     <!--vector colors-->

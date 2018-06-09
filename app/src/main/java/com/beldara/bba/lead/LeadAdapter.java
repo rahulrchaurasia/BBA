@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,16 +23,19 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
 
     Activity mContext;
     List<LeadEntity> LeadLst;
+    String LeadType = "";
 
-    public LeadAdapter(Activity mContext, List<LeadEntity> leadLst) {
+    public LeadAdapter(Activity mContext, List<LeadEntity> leadLst , String leadType ) {
         this.mContext = mContext;
         LeadLst = leadLst;
+        LeadType = leadType;
     }
 
     public class LeadItem extends RecyclerView.ViewHolder
     {
         public TextView txtName, txtMobile, txtCategory,txtEmailID ,txtContPerson;
         public LinearLayout lyCalling,lyEdit;
+        Button btnAssignee;
 
         public LeadItem(View itemView) {
             super(itemView);
@@ -39,8 +43,10 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
             txtMobile = (TextView) itemView.findViewById(R.id.txtMobile);
             txtEmailID = (TextView) itemView.findViewById(R.id.txtEmailID);
             txtContPerson = (TextView) itemView.findViewById(R.id.txtContPerson);
+            txtCategory = (TextView) itemView.findViewById(R.id.txtCategory);
             lyCalling = (LinearLayout) itemView.findViewById(R.id.lyCalling);
             lyEdit = (LinearLayout) itemView.findViewById(R.id.lyEdit);
+            btnAssignee = (Button) itemView.findViewById(R.id.btnAssignee);
 
         }
     }
@@ -56,21 +62,32 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
     }
 
     @Override
-    public void onBindViewHolder(LeadAdapter.LeadItem holder, int position) {
+    public void onBindViewHolder(LeadAdapter.LeadItem holder, final int position) {
 
         final LeadEntity leadEntity = LeadLst.get(position);
+
+        if(LeadType.equals("M"))
+        {
+            holder.lyCalling.setVisibility(View.VISIBLE);
+            holder.lyEdit.setVisibility(View.VISIBLE);
+            holder.btnAssignee.setVisibility(View.GONE);
+        }else{
+            holder.lyCalling.setVisibility(View.GONE);
+            holder.lyEdit.setVisibility(View.GONE);
+            holder.btnAssignee.setVisibility(View.VISIBLE);
+        }
         holder.txtName.setText("" + leadEntity.getCompany());
         holder.txtMobile.setText("" + leadEntity.getMobile());
         holder.txtEmailID.setText("" + leadEntity.getEmail());
         holder.txtContPerson.setText("" + leadEntity.getSellerName());
 
   //      holder.txtRemark.setText("" + leadListEntity.getRemark());
-//        holder.lyCalling.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ((AddLeadListActivity) context).dialCall(leadListEntity.getMbno(), leadListEntity, position);
-//            }
-//        });
+        holder.lyCalling.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((LeadActivity) mContext).dialCall(leadEntity.getMobile(), leadEntity);
+            }
+        });
 
     }
 

@@ -45,7 +45,8 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
             "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.CALL_PHONE",
-            "android.permission.RECORD_AUDIO"
+            "android.permission.RECORD_AUDIO",
+            "android.permission.WRITE_CALL_LOG"
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +132,7 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
         int READ_EXTERNAL = ContextCompat.checkSelfPermission(getApplicationContext(), perms[6]);
         int callPhone = ContextCompat.checkSelfPermission(getApplicationContext(), perms[7]);
         int recordAudio = ContextCompat.checkSelfPermission(getApplicationContext(), perms[8]);
+        int writeLog = ContextCompat.checkSelfPermission(getApplicationContext(), perms[9]);
         return camera == PackageManager.PERMISSION_GRANTED
                 && fineLocation == PackageManager.PERMISSION_GRANTED
                 && sendSms == PackageManager.PERMISSION_GRANTED
@@ -139,7 +141,8 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
                 && WRITE_EXTERNAL == PackageManager.PERMISSION_GRANTED
                 && READ_EXTERNAL == PackageManager.PERMISSION_GRANTED
                 && callPhone == PackageManager.PERMISSION_GRANTED
-                && recordAudio == PackageManager.PERMISSION_GRANTED;
+                && recordAudio == PackageManager.PERMISSION_GRANTED
+                && writeLog == PackageManager.PERMISSION_GRANTED;
     }
 
 
@@ -151,9 +154,12 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
             cancelDialog();
             if (response.getStatusId() == 1) {
 
-                prefManager.setMobile(etMobile.getText().toString());
+
+                prefManager.setUser(etMobile.getText().toString());
                 prefManager.setPassword(etPassword.getText().toString());
-                //  Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+                prefManager.setUserID(((LoginResponse) response).getResult().get(0).getId());
+                prefManager.setType(((LoginResponse) response).getResult().get(0).getType());
+
                 startActivity(new Intent(loginActivity.this, HomeActivity.class));
                 finish();
             }
@@ -187,10 +193,11 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
                     boolean readExternal = grantResults[6] == PackageManager.PERMISSION_GRANTED;
                     boolean callPhone = grantResults[7] == PackageManager.PERMISSION_GRANTED;
                     boolean recordAudio = grantResults[8] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeLog = grantResults[9] == PackageManager.PERMISSION_GRANTED;
 
 
 
-                    if (camera && fineLocation && sendSms && readSms && receiveSms && writeExternal && readExternal && callPhone && recordAudio) {
+                    if (camera && fineLocation && sendSms && readSms && receiveSms && writeExternal && readExternal && callPhone && recordAudio && writeLog) {
                         // you can do all necessary steps
                         // new Dialer().getObject().getLeadData(String.valueOf(Utility.EmpCode), this, this);
                         // Toast.makeText(this, "All permission granted", Toast.LENGTH_SHORT).show();

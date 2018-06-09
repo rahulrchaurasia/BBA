@@ -1,6 +1,9 @@
 package com.beldara.bba.core.model;
 
-public  class LeadEntity {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public  class LeadEntity implements Parcelable {
         /**
          * sellerid : 720909
          * sellerName : 
@@ -19,7 +22,29 @@ public  class LeadEntity {
         private String assigned;
         private String Category;
 
-        public String getSellerid() {
+    protected LeadEntity(Parcel in) {
+        sellerid = in.readString();
+        sellerName = in.readString();
+        email = in.readString();
+        mobile = in.readString();
+        company = in.readString();
+        assigned = in.readString();
+        Category = in.readString();
+    }
+
+    public static final Creator<LeadEntity> CREATOR = new Creator<LeadEntity>() {
+        @Override
+        public LeadEntity createFromParcel(Parcel in) {
+            return new LeadEntity(in);
+        }
+
+        @Override
+        public LeadEntity[] newArray(int size) {
+            return new LeadEntity[size];
+        }
+    };
+
+    public String getSellerid() {
             return sellerid;
         }
 
@@ -74,4 +99,20 @@ public  class LeadEntity {
         public void setCategory(String Category) {
             this.Category = Category;
         }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(sellerid);
+        dest.writeString(sellerName);
+        dest.writeString(email);
+        dest.writeString(mobile);
+        dest.writeString(company);
+        dest.writeString(assigned);
+        dest.writeString(Category);
+    }
+}

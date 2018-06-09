@@ -111,7 +111,8 @@
             card_view:cardBackgroundColor="@color/white"
             card_view:cardCornerRadius="10dp"
             card_view:cardElevation="5dp"
-            android:layout_margin="5dp" >
+            android:layout_margin="5dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/lyAccpLead"

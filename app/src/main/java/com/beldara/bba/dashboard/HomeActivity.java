@@ -24,6 +24,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         setSupportActionBar(toolbar);
 
         initialize();
+        setListner();
     }
 
     public void initialize()
@@ -31,6 +32,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         lyOpenLead = (LinearLayout) findViewById(R.id.lyOpenLead);
         lyMyLead = (LinearLayout) findViewById(R.id.lyMyLead);
         lyAccpLead = (LinearLayout) findViewById(R.id.lyAccpLead);
+    }
+
+    private void setListner()
+    {
+        lyOpenLead.setOnClickListener(this);
+        lyMyLead.setOnClickListener(this);
+        lyAccpLead.setOnClickListener(this);
     }
 
     @Override
