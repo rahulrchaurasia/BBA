@@ -51,8 +51,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         setContentView(R.layout.activity_register);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+              setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         registerRequestEntity = new RegisterEnity();
         initWidgets();
         setListener();
