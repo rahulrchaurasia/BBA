@@ -55,6 +55,7 @@
 
         <activity
             android:name=".splash.SplashScreenActivity"
+            android:screenOrientation="portrait"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,6 +73,7 @@
         <activity
             android:name=".dashboard.HomeActivity"
             android:label="@string/title_activity_home"
+
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -89,17 +91,20 @@
         <activity
             android:name=".followup.FollowUpActivity"
             android:label="@string/title_activity_follow_up"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
             android:theme="@style/AppTheme" />
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/title_activity_Register"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
 
         <activity
             android:name=".FollowUpHistory.FollowUpHistoryActivity"
             android:label="@string/title_FollowUpHistoryActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
 
 
