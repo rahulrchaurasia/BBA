@@ -8,6 +8,7 @@
     <string name="file_provider_authority" translatable="false">com.beldara.bba.fileprovider</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_lead">Lead</string>
+    <string name="title_activity_Register">Register</string>
 
 
 </resources>
