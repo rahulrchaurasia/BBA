@@ -123,7 +123,8 @@
                     <EditText
                         android:id="@+id/etPanNo"
                         style="@style/Style.edittext"
-
+                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                        android:inputType="textCapCharacters"
 
                         android:maxLength="10" />
 
@@ -162,7 +163,7 @@
                         style="@style/Style.edittext"
 
                         android:inputType="number"
-                        android:maxLength="6" />
+                        android:maxLength="50" />
 
                 </android.support.design.widget.TextInputLayout>
 
