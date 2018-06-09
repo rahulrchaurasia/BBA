@@ -2,12 +2,13 @@
     <string name="app_name">BBA</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="copyright_content">Powered by Khandekar Group</string>
+    <string name="copyright_content">Powered by Beldara.com</string>
     <string name="title_activity_login">loginActivity</string>
 
     <string name="file_provider_authority" translatable="false">com.beldara.bba.fileprovider</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_lead">Lead</string>
+    <string name="title_activity_Register">Register</string>
 
 
 </resources>
