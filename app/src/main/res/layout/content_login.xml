@@ -58,7 +58,7 @@
                 android:id="@+id/etPassword"
                 style="@style/Style.edittext"
                 android:inputType="textPassword"
-                android:text="" />
+                android:text="123456" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
