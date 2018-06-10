@@ -123,9 +123,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         registerRequestEntity.setLast_Name("" + etLastName.getText());
 
         registerRequestEntity.setContact_No("" + etMobile1.getText());
-        registerRequestEntity.setPAN_No("" + etMobile1.getText());
-        registerRequestEntity.setUserPassword("" + etEmail.getText());
+        registerRequestEntity.setPAN_No("" + etPanNo.getText());
+        registerRequestEntity.setUserPassword("" + etPassworde.getText());
         registerRequestEntity.setCity("" + etCity.getText());
+        registerRequestEntity.setEmail_Id("" + etEmail.getText());
 
             registerRequestEntity.setNewEmpCode("0");
 
@@ -133,7 +134,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         registerRequestEntity.setParentEmpCode("0");
         registerRequestEntity.setSource("0");
-
+        registerRequestEntity.setLat("0");
+        registerRequestEntity.setLng("0");
     }
     @Override
     public void onClick(View view) {
