@@ -35,6 +35,8 @@ String sellerid="";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mList = new ArrayList<FollowUpHistoryEntity>();
 
         if (getIntent().getStringExtra(LeadActivity.FROM_ID) != null) {

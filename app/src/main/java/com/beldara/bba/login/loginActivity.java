@@ -162,7 +162,12 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
 
                 startActivity(new Intent(loginActivity.this, HomeActivity.class));
                 finish();
+            }else {
+                cancelDialog();
             }
+        }
+        else {
+            cancelDialog();
         }
     }
 

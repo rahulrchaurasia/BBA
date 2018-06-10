@@ -92,8 +92,12 @@
             android:name=".followup.FollowUpActivity"
             android:label="@string/title_activity_follow_up"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
-            android:theme="@style/AppTheme" />
+
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+
+        </activity>
+
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/title_activity_Register"
@@ -105,7 +109,12 @@
             android:name=".FollowUpHistory.FollowUpHistoryActivity"
             android:label="@string/title_FollowUpHistoryActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:parentActivityName=".lead.LeadActivity"
             android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.beldara.bba.lead.LeadActivity" />
 
 
         </activity>
