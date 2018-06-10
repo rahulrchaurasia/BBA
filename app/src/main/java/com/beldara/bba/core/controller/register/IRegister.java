@@ -17,7 +17,7 @@ public interface IRegister {
 
     void getMyLead(String userid, IResponseSubcriber iResponseSubcriber);
 
-    void getAcceptLead(String userid, IResponseSubcriber iResponseSubcriber);
+    void getAcceptLead(String userid,String sellerid, IResponseSubcriber iResponseSubcriber);
 
     void  SaveRegister(RegisterEnity entity, IResponseSubcriber iResponseSubcriber);
 

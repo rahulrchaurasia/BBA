@@ -5,6 +5,7 @@ package com.beldara.bba.core.requestbuilder;
 import com.beldara.bba.core.RetroRequestBuilder;
 import com.beldara.bba.core.model.RegisterEnity;
 import com.beldara.bba.core.requestmodel.FollowupRequestEntity;
+import com.beldara.bba.core.response.CommonResponse;
 import com.beldara.bba.core.response.FollowUpHistoryResponse;
 import com.beldara.bba.core.response.FollowUpSaveResponse;
 import com.beldara.bba.core.response.LeadResponse;
@@ -43,7 +44,7 @@ public class RegisterRequestBuilder extends RetroRequestBuilder {
 
 
         @POST("/kapi.php?m=AL")
-        Call<LeadResponse> getAcceptLead(@Body HashMap<String, String> body);
+        Call<CommonResponse> getAcceptLead(@Body HashMap<String, String> body);
 
 
         @POST("/kapi.php?m=R")
