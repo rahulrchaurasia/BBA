@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.beldara.bba.R;
+import com.beldara.bba.dashboard.HomeActivity;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.utility.Constants;
 
@@ -21,6 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     TextView txtGroup;
     private final int SPLASH_DISPLAY_LENGTH = 3000;
+    PrefManager prefManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,22 +33,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash_screen);
         txtGroup = (TextView) findViewById(R.id.txtGroup);
-
+        prefManager = new PrefManager(SplashScreenActivity.this);
 
         verify();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                startActivity(new Intent(SplashScreenActivity.this, loginActivity.class));
-
-//                if (loginFacade.getUser() != null) {
-//                    startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-//                } else {
-//                    startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
-//                }
-            }
-        }, SPLASH_DISPLAY_LENGTH);
     }
 
 
@@ -70,23 +60,25 @@ public class SplashScreenActivity extends AppCompatActivity {
             textView.setTextColor(Color.CYAN);
 
             snackbar.show();
-        } /*else {
+        } else {
 
 
-            if (prefManager.IsProductMasterUpdate()) {
-                new ProductController(this).getProductMaster(this);
-                new ProductController(this).getRTOLocationMaster(this);
 
-            }
 
-            new android.os.Handler().postDelayed(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
 
+                   // startActivity(new Intent(SplashScreenActivity.this, loginActivity.class));
+
+                if (prefManager.getUserID() != null) {
+                    startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
+                } else {
                     startActivity(new Intent(SplashScreenActivity.this, loginActivity.class));
                 }
-            }, Constants.SPLASH_DISPLAY_LENGTH);
-        }*/
+                }
+            }, SPLASH_DISPLAY_LENGTH);
+        }
 
     }
 }

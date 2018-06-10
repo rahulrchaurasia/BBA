@@ -4,10 +4,13 @@ package com.beldara.bba.core.requestbuilder;
 
 import com.beldara.bba.core.RetroRequestBuilder;
 import com.beldara.bba.core.model.RegisterEnity;
+import com.beldara.bba.core.requestmodel.FollowupRequestEntity;
 import com.beldara.bba.core.response.FollowUpHistoryResponse;
+import com.beldara.bba.core.response.FollowUpSaveResponse;
 import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.core.response.RegisterResponse;
+import com.beldara.bba.core.response.StatusResponse;
 
 import java.util.HashMap;
 
@@ -51,8 +54,10 @@ public class RegisterRequestBuilder extends RetroRequestBuilder {
         Call<FollowUpHistoryResponse> getFollowupHistory(@Body HashMap<String, String> body);
 
         @POST("/kapi.php?m=FM")
-        Call<FollowUpHistoryResponse> getFollowupMaster();
+        Call<StatusResponse> getStatusMaster();
 
+        @POST("/kapi.php?m=FI")
+        Call<FollowUpSaveResponse> saveFollowup(@Body FollowupRequestEntity followupRequestEntity);
 
     }
 }

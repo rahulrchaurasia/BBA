@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,4 +9,165 @@
     tools:context="com.beldara.bba.followup.FollowUpActivity"
     tools:showIn="@layout/activity_follow_up">
 
-</android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:layout_above="@+id/btn_submit">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Company Name">
+
+                <EditText
+                    android:id="@+id/etCompanyName"
+                    style="@style/Style.edittext"
+                    android:inputType="text"
+                    android:maxLength="40"
+                    android:text="" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ti3"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Supplier Name">
+
+                <EditText
+                    android:id="@+id/etSupplierName"
+                    style="@style/Style.edittext"
+                    android:inputType="text"
+                    android:maxLength="40"
+                    android:text="" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+            android:id="@+id/ti2"
+            style="@style/TextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:hint="Mobile No">
+
+            <EditText
+                android:id="@+id/etSupplierMobile"
+                style="@style/Style.edittext"
+                android:inputType="number"
+                android:maxLength="10"
+                android:text="" />
+        </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ti4"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="EmailID">
+
+                <EditText
+                    android:id="@+id/etemailID"
+                    style="@style/Style.edittext"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="40"
+                    android:text="" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                style="@style/TextViewStyle.Large"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+
+                android:text="City :" />
+
+
+            <Spinner
+
+                android:id="@+id/spStatus"
+                style="@style/SpinnerStyle.Underlined"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ti6"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Date">
+
+                <EditText
+                    android:id="@+id/etDate"
+                    style="@style/Style.edittext"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:text="" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ti7"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Remark">
+
+                <EditText
+                    android:id="@+id/etRemark"
+                    style="@style/Style.edittext"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:maxLines="2"
+                    android:text="" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_submit"
+        style="@style/ButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
+
+
+</RelativeLayout>

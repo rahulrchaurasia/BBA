@@ -181,7 +181,7 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
                             }
 
                             Intent intent = new Intent(LeadActivity.this, FollowUpActivity.class);
-                         //   intent.putExtra("LEAD_DETAILS", leadEntity);
+                           intent.putExtra("LEAD_DETAILS", leadEntity);
                          //   intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
 
                             startActivity(intent);
@@ -198,9 +198,9 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
             };
             telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             Intent intent = new Intent(Intent.ACTION_CALL);
-         //   intent.setData(Uri.parse("tel:" + mbNumber));
+             intent.setData(Uri.parse("tel:" + mbNumber));
 
-              intent.setData(Uri.parse("tel:" + "9224624999"));
+             // intent.setData(Uri.parse("tel:" + "9224624999"));
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
