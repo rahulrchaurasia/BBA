@@ -1,6 +1,7 @@
 package com.beldara.bba.lead;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
@@ -85,9 +86,8 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
     private void initialize() {
 
         prefManager = new PrefManager(LeadActivity.this);
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         LeadLst = new ArrayList<LeadEntity>();
-
-
 
         rvLead = (RecyclerView) findViewById(R.id.rvLead);
         rvLead.setHasFixedSize(true);
@@ -178,7 +178,7 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
                             }
 
                             Intent intent = new Intent(LeadActivity.this, FollowUpActivity.class);
-                         //   intent.putExtra("LEAD_DETAILS", leadEntity);
+                            intent.putExtra("LEAD_DETAILS", leadEntity);
                          //   intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
 
                             startActivity(intent);
