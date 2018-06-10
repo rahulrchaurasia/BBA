@@ -203,7 +203,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="80"
+                    android:layout_weight="65"
                     android:orientation="horizontal"
                     android:padding="5dp"
                     android:paddingBottom="8dp"
@@ -235,6 +235,25 @@
                         android:maxLines="6" />
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:id="@+id/lyHistory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:layout_weight="15"
+                    android:gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/imgHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/edit_icon" />
+
+
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/lyEdit"
                     android:layout_width="0dp"

@@ -265,11 +265,11 @@ public class RegisterController implements IRegister {
     }
 
     @Override
-    public void getFollowupHistory(String userid, final IResponseSubcriber iResponseSubcriber) {
+    public void getFollowupHistory(String sellerid, final IResponseSubcriber iResponseSubcriber) {
 
         HashMap<String, String> body = new HashMap<>();
 
-        body.put("userid", userid);
+        body.put("sellerid", sellerid);
         registerQuotesNetworkService.getFollowupHistory(body).enqueue(new Callback<FollowUpHistoryResponse>() {
             @Override
             public void onResponse(Call<FollowUpHistoryResponse> call, Response<FollowUpHistoryResponse> response) {

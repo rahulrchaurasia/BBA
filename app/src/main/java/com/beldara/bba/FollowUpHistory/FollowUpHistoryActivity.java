@@ -13,6 +13,7 @@ import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.controller.register.RegisterController;
 import com.beldara.bba.core.model.FollowUpHistoryEntity;
 import com.beldara.bba.core.response.FollowUpHistoryResponse;
+import com.beldara.bba.lead.LeadActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class FollowUpHistoryActivity extends BaseActivity implements  IResponseS
 
     List<FollowUpHistoryEntity> mList;
     boolean isHit = false;
-
+String sellerid="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,12 @@ public class FollowUpHistoryActivity extends BaseActivity implements  IResponseS
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mList = new ArrayList<FollowUpHistoryEntity>();
 
+        if (getIntent().getStringExtra(LeadActivity.FROM_ID) != null) {
+            sellerid = getIntent().getStringExtra(LeadActivity.FROM_ID);
+            //  homeLoanRequestEntity = fmHomeLoanRequest.getHomeLoanRequest();
+
+
+        }
         init();
 
         fetchPendingCases(0);
@@ -63,8 +70,8 @@ public class FollowUpHistoryActivity extends BaseActivity implements  IResponseS
 
     private void fetchPendingCases(int count) {
 
-        showDialog();
-        new RegisterController(this).getFollowupHistory("1", this);
+    //    showDialog();
+        new RegisterController(this).getFollowupHistory(sellerid, this);
 
 
     }
@@ -80,7 +87,7 @@ public class FollowUpHistoryActivity extends BaseActivity implements  IResponseS
 
     @Override
     public void OnSuccess(APIResponse response, String message) {
-        cancelDialog();
+     //   cancelDialog();
         List<FollowUpHistoryEntity> list = new ArrayList<>();
         if (response instanceof FollowUpHistoryResponse) {
             list = ((FollowUpHistoryResponse) response).getResult();
