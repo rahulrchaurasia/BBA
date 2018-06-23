@@ -28,6 +28,7 @@ import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.controller.register.RegisterController;
 import com.beldara.bba.core.model.FollowUpHistoryEntity;
 import com.beldara.bba.core.model.LeadEntity;
+import com.beldara.bba.core.response.CommonResponse;
 import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.dashboard.HomeActivity;
@@ -117,6 +118,14 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
                     Snackbar.make(rvLead, "No  Data Available", Snackbar.LENGTH_SHORT).show();
                 }
             }
+        }else if(response instanceof CommonResponse)
+        {
+            cancelDialog();
+       //   showAlert( ((CommonResponse) response).getMessage());
+
+            Toast.makeText( this,((CommonResponse) response).getMessage().toString(), Toast.LENGTH_SHORT).show();
+            showDialog("Please Wait...");
+            new RegisterController(LeadActivity.this).getOpenLead( this);
         }
     }
 
@@ -220,6 +229,15 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
         Intent intent = new Intent(LeadActivity.this, FollowUpHistoryActivity.class);
         intent.putExtra(FROM_ID, sellerid);
         startActivity(intent);
+
+    }
+
+    public void getAcceptLead(String sellerid) {
+
+
+        showDialog("Please Wait...");
+
+        new RegisterController(LeadActivity.this).getAcceptLead( prefManager.getUserID() ,sellerid ,this);
 
     }
 }

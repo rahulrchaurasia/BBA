@@ -102,6 +102,13 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
             }
         });
 
+        holder.btnAssignee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LeadActivity) mContext).getAcceptLead(leadEntity.getSellerid());
+            }
+        });
+
     }
 
     @Override

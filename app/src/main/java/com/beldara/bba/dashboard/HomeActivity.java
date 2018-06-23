@@ -6,12 +6,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.beldara.bba.BaseActivity;
 import com.beldara.bba.R;
 import com.beldara.bba.lead.LeadActivity;
+import com.beldara.bba.login.loginActivity;
+import com.beldara.bba.splash.PrefManager;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -60,6 +65,33 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                         .putExtra("LEAD_TYP","A"));
                 break;
 
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.logout_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_logout:
+
+                new PrefManager(HomeActivity.this).clearAll();
+                Intent intent = new Intent(HomeActivity.this, loginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

@@ -6,6 +6,7 @@ import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.model.RegisterEnity;
 import com.beldara.bba.core.requestbuilder.RegisterRequestBuilder;
 import com.beldara.bba.core.requestmodel.FollowupRequestEntity;
+import com.beldara.bba.core.response.CommonResponse;
 import com.beldara.bba.core.response.FollowUpHistoryResponse;
 import com.beldara.bba.core.response.FollowUpSaveResponse;
 import com.beldara.bba.core.response.LeadResponse;
@@ -181,14 +182,15 @@ public class RegisterController implements IRegister {
     }
 
     @Override
-    public void getAcceptLead(String userid, final IResponseSubcriber iResponseSubcriber) {
+    public void getAcceptLead(String userid,String sellerid, final IResponseSubcriber iResponseSubcriber) {
 
         HashMap<String, String> body = new HashMap<>();
 
         body.put("userid", userid);
-        registerQuotesNetworkService.getAcceptLead(body).enqueue(new Callback<LeadResponse>() {
+        body.put("sellerid", sellerid);
+        registerQuotesNetworkService.getAcceptLead(body).enqueue(new Callback<CommonResponse>() {
             @Override
-            public void onResponse(Call<LeadResponse> call, Response<LeadResponse> response) {
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 if (response.body() != null) {
 
                     //callback of data
@@ -209,7 +211,7 @@ public class RegisterController implements IRegister {
             }
 
             @Override
-            public void onFailure(Call<LeadResponse> call, Throwable t) {
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
                 if (t instanceof ConnectException) {
                     iResponseSubcriber.OnFailure(t);
                 } else if (t instanceof SocketTimeoutException) {

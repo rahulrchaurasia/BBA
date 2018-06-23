@@ -107,4 +107,14 @@ public class PrefManager {
     }
 
 
+    public void clearAll() {
+        pref.edit().remove(USER)
+                .remove(PASSWORD)
+                .remove(USER_ID)
+                .remove(CALL_STATUS)
+                .remove(BBA_TYPE).commit();
+
+    }
+
+
 }
