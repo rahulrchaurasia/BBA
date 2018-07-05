@@ -1,14 +1,10 @@
 package com.beldara.bba.Test;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.beldara.bba.BaseActivity;
 import com.beldara.bba.R;
@@ -28,13 +24,13 @@ public class testActivity   extends BaseActivity implements View.OnClickListener
 
     private void initialize() {
 
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        etMobile = (EditText) findViewById(R.id.etMobile);
+   //     etPassword = (EditText) findViewById(R.id.etPassword);
+    //    etMobile = (EditText) findViewById(R.id.etMobile);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
       //  tvRegistration = (TextView) findViewById(R.id.tvRegistration);
       ///  tvForgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
 
-        btnSignIn = (Button) findViewById(R.id.btnSignIn);
+
 
         btnSignIn.setOnClickListener(this);
 
@@ -45,20 +41,23 @@ public class testActivity   extends BaseActivity implements View.OnClickListener
         switch (view.getId()) {
 
             case R.id.btnSignIn:
-                if (!isEmpty(etMobile)) {
-                    etMobile.requestFocus();
-                    Snackbar.make(etMobile, "Enter UserID", Snackbar.LENGTH_LONG).show();
-                    // etMobile.setError("Enter Mobile");
-                    return;
-                }
-                if (!isEmpty(etPassword)) {
-                    etPassword.requestFocus();
-                    Snackbar.make(etMobile, "Enter Password", Snackbar.LENGTH_LONG).show();
-                    //  etPassword.setError("Enter Password");
-                    return;
-                }
+//                if (!isEmpty(etMobile)) {
+//                    etMobile.requestFocus();
+//                    Snackbar.make(etMobile, "Enter UserID", Snackbar.LENGTH_LONG).show();
+//                    // etMobile.setError("Enter Mobile");
+//                    return;
+//                }
+//                if (!isEmpty(etPassword)) {
+//                    etPassword.requestFocus();
+//                    Snackbar.make(etMobile, "Enter Password", Snackbar.LENGTH_LONG).show();
+//                    //  etPassword.setError("Enter Password");
+//                    return;
+//                }
 
-                new InsertAddress(testActivity.this).insertaddrs(etMobile.getText().toString(),etPassword.getText().toString());
+                new Async(testActivity.this, "9920298619").execute();
+             //   new InsertAddress(testActivity.this).test("9920298619");
+
+            //    new InsertAddress(testActivity.this).insertaddrs(etMobile.getText().toString(),etPassword.getText().toString());
 
                 showDialog("Please Wait...");
 
