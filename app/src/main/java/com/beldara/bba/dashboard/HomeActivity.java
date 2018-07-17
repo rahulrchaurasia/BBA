@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.beldara.bba.BaseActivity;
 import com.beldara.bba.R;
+import com.beldara.bba.dial_pad.DialPadActivity;
 import com.beldara.bba.lead.LeadActivity;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.splash.PrefManager;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
-    LinearLayout lyOpenLead , lyMyLead, lyAccpLead;
+    LinearLayout lyOpenLead , lyMyLead, lyAccpLead,lydialpad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         lyOpenLead = (LinearLayout) findViewById(R.id.lyOpenLead);
         lyMyLead = (LinearLayout) findViewById(R.id.lyMyLead);
         lyAccpLead = (LinearLayout) findViewById(R.id.lyAccpLead);
+        lydialpad = (LinearLayout) findViewById(R.id.lydialpad);
     }
 
     private void setListner()
@@ -44,6 +46,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         lyOpenLead.setOnClickListener(this);
         lyMyLead.setOnClickListener(this);
         lyAccpLead.setOnClickListener(this);
+        lydialpad.setOnClickListener(this);
     }
 
     @Override
@@ -63,6 +66,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             case R.id.lyAccpLead:
                 startActivity(new Intent(HomeActivity.this, LeadActivity.class)
                         .putExtra("LEAD_TYP","A"));
+                break;
+            case R.id.lydialpad:
+                startActivity(new Intent(HomeActivity.this, DialPadActivity.class));
                 break;
 
         }

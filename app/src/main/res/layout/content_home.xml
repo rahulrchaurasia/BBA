@@ -112,7 +112,7 @@
             card_view:cardCornerRadius="10dp"
             card_view:cardElevation="5dp"
             android:layout_margin="5dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/lyAccpLead"
@@ -151,7 +151,7 @@
             card_view:cardCornerRadius="10dp"
             card_view:cardElevation="5dp"
             android:layout_margin="5dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -170,6 +170,55 @@
 
                 <TextView
                     android:id="@+id/txtLoss"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    style="@style/TextViewStyle.Large"
+                    android:textColor="@color/black"
+                    android:text="" />
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            android:layout_margin="5dp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/lydialpad"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewStyle.Large"
+                    android:textColor="@color/colorAccent"
+                    android:text="Dial pad" />
+
+                <TextView
+                    android:id="@+id/txtdialpad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"

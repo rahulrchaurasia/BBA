@@ -22,6 +22,7 @@
     <color name="seperator">#E1DEDE</color>
     <color name="search_gray">#bcbcbc</color>
     <color name="black">#212121</color>
+    <color name="background_color">#dadada</color>
 
     <!--RBA-->
     <color name="white">#ffffff</color>
@@ -35,6 +36,8 @@
     <color name="orange_descent">#f07d00</color>
     <color name="offer_info_white">#DDFFFFFF</color>
     <color name="alpha_white">#26ffffff</color>
+    <color name="green">#00b300</color>
+
     <!--vector colors-->
     <!--<color name="vector_blue">#11408b</color>-->
     <color name="vector_blue">#646566</color>

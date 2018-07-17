@@ -52,7 +52,11 @@
             android:name=".splash.SplashScreenActivity"
             android:noHistory="true"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".login.loginActivity"
@@ -104,11 +108,13 @@
             android:name=".Test.testActivity"
             android:label="@string/title_activity_test"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+        <activity
+            android:name=".dial_pad.DialPadActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme">
+
         </activity>
     </application>
 

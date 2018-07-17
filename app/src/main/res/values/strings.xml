@@ -11,7 +11,7 @@
     <string name="title_activity_follow_up">FollowUp</string>
     <string name="title_activity_Register">Register</string>
     <string name="title_FollowUpHistoryActivity">Follow Up History</string>
-    <string name="title_activity_test">testActivity</string>
+    <string name="title_activity_test">DialPad </string>
     <string name="domain">http://uat.beldara.com/</string>
     <string name="insert_user">kapi.php?m=FP</string>
 
