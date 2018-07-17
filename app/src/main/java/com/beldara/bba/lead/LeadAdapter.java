@@ -95,6 +95,13 @@ public class LeadAdapter  extends RecyclerView.Adapter<LeadAdapter.LeadItem> {
             }
         });
 
+        holder.lyEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LeadActivity) mContext).redirectfollowup(leadEntity);
+            }
+        });
+
         holder.lyHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

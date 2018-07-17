@@ -106,7 +106,7 @@ public class RegisterController implements IRegister {
                         iResponseSubcriber.OnSuccess(response.body(), response.body().getMessage());
                     } else {
                         //failure
-                        iResponseSubcriber.OnFailure(new RuntimeException((response.body().getMessage())));
+                        iResponseSubcriber.OnSuccess(response.body(), response.body().getMessage());
                     }
 
 

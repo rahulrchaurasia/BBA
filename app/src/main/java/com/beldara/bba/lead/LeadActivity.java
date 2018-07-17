@@ -117,6 +117,9 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
                     rvLead.setAdapter(null);
                     Snackbar.make(rvLead, "No  Data Available", Snackbar.LENGTH_SHORT).show();
                 }
+            }else{
+                rvLead.setAdapter(null);
+                Snackbar.make(rvLead, "No  Data Available", Snackbar.LENGTH_SHORT).show();
             }
         }else if(response instanceof CommonResponse)
         {
@@ -232,6 +235,12 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
 
     }
 
+    public void redirectfollowup(LeadEntity leadEntity) {
+        Intent intent = new Intent(LeadActivity.this, FollowUpActivity.class);
+        intent.putExtra("LEAD_DETAILS", leadEntity);
+        startActivity(intent);
+
+    }
     public void getAcceptLead(String sellerid) {
 
 
