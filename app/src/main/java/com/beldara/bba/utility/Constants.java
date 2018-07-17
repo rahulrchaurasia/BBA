@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
  */
 
 public class Constants {
-
+    public static String SHAREDPREFERENCE_TITLE = "beldara_android";
     public static int SPLASH_DISPLAY_LENGTH = 2000;
     public static int PAYMENT_SUCCESS = 1;
     public static int PAYMENT_FAILURE = 0;
