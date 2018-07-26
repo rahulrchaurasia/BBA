@@ -3,6 +3,7 @@ package com.beldara.bba.lead;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -36,23 +37,27 @@ import com.beldara.bba.followup.FollowUpActivity;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.splash.PrefManager;
 import com.beldara.bba.utility.AudioRecorder;
+import com.beldara.bba.utility.Constants;
 import com.beldara.bba.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
+public class LeadActivity extends BaseActivity implements IResponseSubcriber {
     public static final String FROM_ID = "id_from_quote";
     TelephonyManager telephonyManager;
     PhoneStateListener callStateListener;
-  //  AudioRecorder audioRecorder;
+    AudioRecorder audioRecorder;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     long startTime, endTime = 0;
 
     RecyclerView rvLead;
     List<LeadEntity> LeadLst;
     LeadAdapter mAdapter;
-//    DBPersistanceController dbPersistanceController;
+    //    DBPersistanceController dbPersistanceController;
 //    LoginResponseEntity loginEntity;
     PrefManager prefManager;
     String LeadType = "";
@@ -74,20 +79,23 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
         initialize();
         showDialog("Please Wait...");
 
-        if(LeadType.equals("M")){
+        if (LeadType.equals("M")) {
 
-            new RegisterController(LeadActivity.this).getMyLead( prefManager.getUserID() ,this);
-        }else{
-            new RegisterController(LeadActivity.this).getOpenLead( this);
+            new RegisterController(LeadActivity.this).getMyLead(prefManager.getUserID(), this);
+        } else {
+            new RegisterController(LeadActivity.this).getOpenLead(this);
         }
-
-
 
 
     }
 
     private void initialize() {
 
+        sharedPreferences = getSharedPreferences(Constants.SHAREDPREFERENCE_TITLE, MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        editor.putString(Utility.CALL_STATUS, "NO");
+        editor.commit();
         prefManager = new PrefManager(LeadActivity.this);
         LeadLst = new ArrayList<LeadEntity>();
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -100,7 +108,6 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
         rvLead.setLayoutManager(layoutManager);
 
 
-
     }
 
     @Override
@@ -109,26 +116,25 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
         if (response instanceof LeadResponse) {
             cancelDialog();
             if (response.getStatusId() == 1) {
-                if ( ((LeadResponse) response).getResult() != null) {
+                if (((LeadResponse) response).getResult() != null) {
                     LeadLst = ((LeadResponse) response).getResult();
-                    mAdapter = new LeadAdapter(LeadActivity.this,LeadLst,LeadType);
+                    mAdapter = new LeadAdapter(LeadActivity.this, LeadLst, LeadType);
                     rvLead.setAdapter(mAdapter);
-                }else{
+                } else {
                     rvLead.setAdapter(null);
                     Snackbar.make(rvLead, "No  Data Available", Snackbar.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 rvLead.setAdapter(null);
                 Snackbar.make(rvLead, "No  Data Available", Snackbar.LENGTH_SHORT).show();
             }
-        }else if(response instanceof CommonResponse)
-        {
+        } else if (response instanceof CommonResponse) {
             cancelDialog();
-       //   showAlert( ((CommonResponse) response).getMessage());
+            //   showAlert( ((CommonResponse) response).getMessage());
 
-            Toast.makeText( this,((CommonResponse) response).getMessage().toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, ((CommonResponse) response).getMessage().toString(), Toast.LENGTH_SHORT).show();
             showDialog("Please Wait...");
-            new RegisterController(LeadActivity.this).getOpenLead( this);
+            new RegisterController(LeadActivity.this).getOpenLead(this);
         }
     }
 
@@ -139,70 +145,67 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
         Toast.makeText(this, t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    public void dialCall(final String mbNumber , final LeadEntity leadEntity ) {
+    public void dialCall(final String mbNumber, final LeadEntity leadEntity) {
 
-        if(mbNumber == null  || mbNumber.isEmpty()  )
-        {
+        if (mbNumber == null || mbNumber.isEmpty()) {
             showAlert("Mobile No. Required.");
-        }
-        else {
+        } else {
             callStateListener = new PhoneStateListener() {
                 public void onCallStateChanged(int state, String incomingNumber) {
 
                     if (state == TelephonyManager.CALL_STATE_RINGING) {
 
                     }
-//                    if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-//
-//                        try {
-//                            if (audioRecorder == null) {
-//                                startTime = Calendar.getInstance().getTimeInMillis();
-//                                audioRecorder = new AudioRecorder();
-//
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.MIC, prefManager.getUserID(), LeadActivity.this);
-//                                } else {
-//                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.VOICE_CALL, "102", LeadActivity.this);
-//                                }
-//                            }
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
+                    if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+
+                        try {
+                            if (audioRecorder == null) {
+                                startTime = Calendar.getInstance().getTimeInMillis();
+                                audioRecorder = new AudioRecorder();
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.MIC, prefManager.getUserID(), LeadActivity.this);
+                                } else {
+                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.VOICE_CALL, prefManager.getUserID(), LeadActivity.this);
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
 
 
                     if (state == TelephonyManager.CALL_STATE_IDLE) {
 
-                        if (prefManager.getCallStatus().matches("YES")) {
+                        if (sharedPreferences.getString(Utility.CALL_STATUS, "").matches("YES")) {
 
                             telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_NONE);
 
-                           // editor.putString(Utility.CALL_STATUS, "NO");
-                            prefManager.setCallStatus("NO");
+                            editor.putString(Utility.CALL_STATUS, "NO");
 
                             try {
-//                                if (audioRecorder != null) {
-//                                    endTime = Calendar.getInstance().getTimeInMillis();
-//                                    audioRecorder.stopRecording();
-//
-//                                }
+                                if (audioRecorder != null) {
+                                    endTime = Calendar.getInstance().getTimeInMillis();
+                                    audioRecorder.stopRecording();
+
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
                             Intent intent = new Intent(LeadActivity.this, FollowUpActivity.class);
-                           intent.putExtra("LEAD_DETAILS", leadEntity);
-                         //   intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
+                            intent.putExtra("LEAD_DETAILS", leadEntity);
+                            intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
 
                             startActivity(intent);
 
                         } else {
-                           // editor.putString(Utility.CALL_STATUS, "YES");
-                            prefManager.setCallStatus("YES");
+                             editor.putString(Utility.CALL_STATUS, "YES");
+
                         }
-                      //  editor.commit();
+                          editor.commit();
 
 
                     }
@@ -210,9 +213,9 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
             };
             telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             Intent intent = new Intent(Intent.ACTION_CALL);
-             intent.setData(Uri.parse("tel:" + mbNumber));
+          //  intent.setData(Uri.parse("tel:" + mbNumber));
 
-             // intent.setData(Uri.parse("tel:" + "9224624999"));
+             intent.setData(Uri.parse("tel:" + "9224624999"));
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -241,12 +244,17 @@ public class LeadActivity extends BaseActivity  implements IResponseSubcriber {
         startActivity(intent);
 
     }
+
     public void getAcceptLead(String sellerid) {
 
 
         showDialog("Please Wait...");
 
-        new RegisterController(LeadActivity.this).getAcceptLead( prefManager.getUserID() ,sellerid ,this);
+        new RegisterController(LeadActivity.this).getAcceptLead(prefManager.getUserID(), sellerid, this);
 
     }
+
+
+
+
 }

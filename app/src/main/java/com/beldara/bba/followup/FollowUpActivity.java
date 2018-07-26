@@ -2,9 +2,11 @@ package com.beldara.bba.followup;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -22,20 +24,27 @@ import com.beldara.bba.core.controller.register.RegisterController;
 import com.beldara.bba.core.model.LeadEntity;
 import com.beldara.bba.core.model.StatusEntity;
 import com.beldara.bba.core.requestmodel.FollowupRequestEntity;
+import com.beldara.bba.core.response.DocumentResponse;
 import com.beldara.bba.core.response.FollowUpSaveResponse;
 import com.beldara.bba.core.response.StatusResponse;
 import com.beldara.bba.dashboard.HomeActivity;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.splash.PrefManager;
+import com.beldara.bba.utility.AudioRecorder;
+import com.beldara.bba.utility.Constants;
 import com.beldara.bba.utility.DateTimePicker;
 import com.beldara.bba.utility.Utility;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import okhttp3.MultipartBody;
 
 public class FollowUpActivity extends BaseActivity implements View.OnClickListener, IResponseSubcriber {
 
@@ -53,6 +62,16 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
 
     FollowupRequestEntity followupRequestEntity;
     PrefManager prefManager;
+    String FOLLOWUP_ID = "0";
+    AudioRecorder audioRecorder;
+    File audioFile;
+
+
+    HashMap<String, Integer> body;
+    MultipartBody.Part part;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +85,18 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         initialize();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            //  audioFile = (File) extras.get("AUDIO_FILE");
+            if (getIntent().hasExtra("AUDIO_PATH")) {
+                String audio_path = extras.getString("AUDIO_PATH");
+                audioFile = new File(audio_path);
+            }
+
+
+        }
         showDialog("Please Wait...");
 
         new RegisterController(FollowUpActivity.this).getStatusMaster(FollowUpActivity.this);
@@ -160,7 +191,7 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
                         if (getIntent().hasExtra("LEAD_DETAILS")) {
                             if (extras.getParcelable("LEAD_DETAILS") != null) {
                                 leadEntity = extras.getParcelable("LEAD_DETAILS");
-                                //  audioFile = (File) extras.get("SUPPLIER_DETAILS");
+
 
                                 etSupplierName.setText(leadEntity.getSellerName());
                                 etCompanyName.setText(leadEntity.getCompany());
@@ -181,11 +212,28 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
             cancelDialog();
             if (response.getStatusId() == 1) {
 
-                Toast.makeText(FollowUpActivity.this,((FollowUpSaveResponse) response).getMessage(),Toast.LENGTH_SHORT).show();
+                FOLLOWUP_ID    = ((FollowUpSaveResponse) response).getResult().getFid();
+              //  Toast.makeText(FollowUpActivity.this,((FollowUpSaveResponse) response).getMessage(),Toast.LENGTH_SHORT).show();
 
-                startActivity(new Intent(FollowUpActivity.this, HomeActivity.class));
-                finish();
+                if(audioFile != null) {
+                    savAudioToDb();
+                }
+               else {
+                    startActivity(new Intent(FollowUpActivity.this, HomeActivity.class));
+                    finish();
+                }
 
+
+            }
+        }
+
+        else if (response instanceof DocumentResponse) {
+            if (response.getStatusId() == 1) {
+
+                if(audioFile != null) {
+                    boolean isDeleted = Utility.deleteAudioFile(audioFile.getAbsolutePath());
+                }
+                Toast.makeText(FollowUpActivity.this,((DocumentResponse) response).getMessage(),Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -195,6 +243,7 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
     public void OnFailure(Throwable t) {
         cancelDialog();
         Toast.makeText(this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Log.d("FileUpload", t.getMessage());
     }
 
     @Override
@@ -268,14 +317,14 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
             followupRequestEntity.setUser_id(prefManager.getUserID());
             followupRequestEntity.setStatus_id(id);
             followupRequestEntity.setSeller_id(leadEntity.getSellerid());
-            followupRequestEntity.setRemark(etRemark.toString());
+            followupRequestEntity.setRemark(etRemark.getText().toString());
             followupRequestEntity.setFollowup_date(strDate);
             followupRequestEntity.setIp("");
             followupRequestEntity.setLang("0");
             followupRequestEntity.setLat("0");
 
             showDialog();
-            new RegisterController(FollowUpActivity.this).saveFollowUo( followupRequestEntity ,this);
+            new RegisterController(FollowUpActivity.this).saveFollowUp( followupRequestEntity ,this);
         }
     }
 
@@ -283,6 +332,7 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+
                 onBackPressed();
 
                 return true;
@@ -291,7 +341,25 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
     }
     @Override
     public void onBackPressed() {
+        sharedPreferences = getSharedPreferences(Constants.SHAREDPREFERENCE_TITLE, MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        editor.putString(Utility.CALL_STATUS, "NO");
+        editor.commit();
+
         finish();
         super.onBackPressed();
+    }
+
+    public void savAudioToDb() {
+        audioRecorder = new AudioRecorder();
+        if (audioFile != null) {
+
+            part = Utility.getMultipartAudio(audioFile);
+            //  body = Utility.getBody(FollowUpSupplierActivity.this, Integer.valueOf(userID), 0, 0, 1, 0);
+            body = Utility.getBody(FollowUpActivity.this, Integer.valueOf(prefManager.getUserID()), Integer.valueOf(leadEntity.getSellerid()),  1, Integer.valueOf(FOLLOWUP_ID));
+
+            new RegisterController(this).uploadDocuments(part, body, FollowUpActivity.this);
+        }
     }
 }

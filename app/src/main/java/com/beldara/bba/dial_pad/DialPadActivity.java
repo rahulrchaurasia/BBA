@@ -22,7 +22,9 @@ import com.beldara.bba.BaseActivity;
 import com.beldara.bba.R;
 import com.beldara.bba.core.APIResponse;
 import com.beldara.bba.core.IResponseSubcriber;
+import com.beldara.bba.followup.FollowUpActivity;
 import com.beldara.bba.lead.LeadActivity;
+import com.beldara.bba.splash.PrefManager;
 import com.beldara.bba.utility.AudioRecorder;
 import com.beldara.bba.utility.Constants;
 import com.beldara.bba.utility.Utility;
@@ -40,7 +42,7 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
     EditText etPhoneNumber;
     Button btnNum0, btnNum1, btnNum2, btnNum3, btnNum4;
     Button btnNum5, btnNum6, btnNum7, btnNum8, btnNum9;
-
+    PrefManager prefManager;
     ImageView btnCall, btnDelete;
     String mbNumber;
     long startTime, endTime = 0;
@@ -62,9 +64,12 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
 
     private void initialise_widget() {
 
+        prefManager = new PrefManager(DialPadActivity.this);
         sharedPreferences = getSharedPreferences(Constants.SHAREDPREFERENCE_TITLE, MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
+        editor.putString(Utility.CALL_STATUS, "NO");
+        editor.commit();
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
@@ -244,9 +249,9 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
                                 audioRecorder = new AudioRecorder();
 
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.MIC, "102", DialPadActivity.this);
+                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.MIC, prefManager.getUserID(), DialPadActivity.this);
                                 } else {
-                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.VOICE_CALL, "102", DialPadActivity.this);
+                                    audioRecorder.startRecording(mbNumber, MediaRecorder.AudioSource.VOICE_CALL, prefManager.getUserID(), DialPadActivity.this);
                                 }
                             }
 
@@ -277,7 +282,7 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
                                 e.printStackTrace();
                             }
 
-                            Intent intent = new Intent(DialPadActivity.this, LeadActivity.class);
+                            Intent intent = new Intent(DialPadActivity.this, FollowUpActivity.class);
                             intent.putExtra("DIAL_NUMBER", mbNumber);
                             intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
                             // intent.putExtra("AUDIO_FILE",audiofile);
@@ -312,4 +317,14 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        sharedPreferences = getSharedPreferences(Constants.SHAREDPREFERENCE_TITLE, MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        editor.putString(Utility.CALL_STATUS, "NO");
+        editor.commit();
+    }
 }

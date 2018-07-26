@@ -4,6 +4,10 @@ import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.model.RegisterEnity;
 import com.beldara.bba.core.requestmodel.FollowupRequestEntity;
 
+import java.util.HashMap;
+
+import okhttp3.MultipartBody;
+
 /**
  * Created by IN-RB on 09-06-2018.
  */
@@ -25,6 +29,9 @@ public interface IRegister {
 
     void getStatusMaster( IResponseSubcriber iResponseSubcriber);
 
-    void  saveFollowUo(FollowupRequestEntity entity, IResponseSubcriber iResponseSubcriber);
+    void  saveFollowUp(FollowupRequestEntity entity, IResponseSubcriber iResponseSubcriber);
+
+    void uploadDocuments(MultipartBody.Part document, HashMap<String, Integer> body, final IResponseSubcriber iResponseSubcriber);
+
 
 }

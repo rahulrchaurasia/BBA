@@ -105,15 +105,7 @@ public class  Utility {
     }
 
 
-    public static HashMap<String, String> getBody(Context context, int userid, int doctype) {
-        HashMap<String, String> body = new HashMap<String, String>();
 
-
-        body.put("userid", String.valueOf(userid));
-        body.put("doctype", String.valueOf(doctype));
-
-        return body;
-    }
 
     public static File createDirIfNotExists() {
         boolean ret = true;
@@ -128,6 +120,15 @@ public class  Utility {
         return file;
     }
 
+    public static boolean deleteAudioFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            return file.delete();
+        }
+        return false;
+    }
+
+
     public static String getCurrentMobileDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
         String currentDateandTime = sdf.format(new Date());
@@ -138,6 +139,39 @@ public class  Utility {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+
+    public static HashMap<String, Integer> getBody(Context context, int userid, int vendorid, int ctype, int fid) {
+        HashMap<String, Integer> body = new HashMap<String, Integer>();
+
+
+        body.put("userid", userid);
+        body.put("sellerid",vendorid );
+
+        body.put("ctype", ctype);
+        body.put("fid", fid);
+
+
+        return body;
+    }
+
+    public static MultipartBody.Part getMultipartImage1(File file) {
+        RequestBody imgBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part imgFile = MultipartBody.Part.createFormData("file_name", file.getName(), imgBody);
+        return imgFile;
+    }
+
+    public static MultipartBody.Part getMultipartAudio(File file) {
+        RequestBody imgBody = RequestBody.create(MediaType.parse("audio/*"), file);
+        MultipartBody.Part imgFile = MultipartBody.Part.createFormData("file_name", file.getName(), imgBody);
+        return imgFile;
+    }
+
+    public static MultipartBody.Part getMultipartVideo(File file) {
+        RequestBody imgBody = RequestBody.create(MediaType.parse("video/*"), file);
+        MultipartBody.Part imgFile = MultipartBody.Part.createFormData("file_name", file.getName(), imgBody);
+        return imgFile;
     }
 
 
