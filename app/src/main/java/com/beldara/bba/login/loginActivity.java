@@ -25,6 +25,7 @@ import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.controller.register.RegisterController;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.dashboard.HomeActivity;
+import com.beldara.bba.location.LocationTracker;
 import com.beldara.bba.register.RegisterActivity;
 import com.beldara.bba.splash.PrefManager;
 
@@ -33,7 +34,7 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
     TextView tvRegistration, tvForgotPassword;
     final private int REQUEST_CODE_ASK_PERMISSIONS = 1111;
     EditText etPassword, etMobile;
-
+    LocationTracker locationTracker;
     PrefManager prefManager;
     Button btnSignIn;
     String[] perms = {
@@ -46,7 +47,8 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.CALL_PHONE",
             "android.permission.RECORD_AUDIO",
-            "android.permission.WRITE_CALL_LOG"
+            "android.permission.WRITE_CALL_LOG",
+            "android.permission.ACCESS_COARSE_LOCATION"
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +135,7 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
         int callPhone = ContextCompat.checkSelfPermission(getApplicationContext(), perms[7]);
         int recordAudio = ContextCompat.checkSelfPermission(getApplicationContext(), perms[8]);
         int writeLog = ContextCompat.checkSelfPermission(getApplicationContext(), perms[9]);
+        int access_coarse_location = ContextCompat.checkSelfPermission(getApplicationContext(), perms[10]);
         return camera == PackageManager.PERMISSION_GRANTED
                 && fineLocation == PackageManager.PERMISSION_GRANTED
                 && sendSms == PackageManager.PERMISSION_GRANTED
@@ -142,7 +145,8 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
                 && READ_EXTERNAL == PackageManager.PERMISSION_GRANTED
                 && callPhone == PackageManager.PERMISSION_GRANTED
                 && recordAudio == PackageManager.PERMISSION_GRANTED
-                && writeLog == PackageManager.PERMISSION_GRANTED;
+                && writeLog == PackageManager.PERMISSION_GRANTED
+                && access_coarse_location == PackageManager.PERMISSION_GRANTED;
     }
 
 
@@ -199,10 +203,11 @@ public class loginActivity extends BaseActivity implements View.OnClickListener,
                     boolean callPhone = grantResults[7] == PackageManager.PERMISSION_GRANTED;
                     boolean recordAudio = grantResults[8] == PackageManager.PERMISSION_GRANTED;
                     boolean writeLog = grantResults[9] == PackageManager.PERMISSION_GRANTED;
+                    boolean accessCoraseLoc = grantResults[9] == PackageManager.PERMISSION_GRANTED;
 
 
 
-                    if (camera && fineLocation && sendSms && readSms && receiveSms && writeExternal && readExternal && callPhone && recordAudio && writeLog) {
+                    if (camera && fineLocation && sendSms && readSms && receiveSms && writeExternal && readExternal && callPhone && recordAudio && writeLog && accessCoraseLoc) {
                         // you can do all necessary steps
                         // new Dialer().getObject().getLeadData(String.valueOf(Utility.EmpCode), this, this);
                         // Toast.makeText(this, "All permission granted", Toast.LENGTH_SHORT).show();

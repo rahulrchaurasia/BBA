@@ -33,5 +33,5 @@ public interface IRegister {
 
     void uploadDocuments(MultipartBody.Part document, HashMap<String, Integer> body, final IResponseSubcriber iResponseSubcriber);
 
-
+    void getSupplierList (String mobile, IResponseSubcriber iResponseSubcriber);
 }

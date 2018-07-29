@@ -1,6 +1,7 @@
 package com.beldara.bba.dashboard;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,10 +17,11 @@ import com.beldara.bba.BaseActivity;
 import com.beldara.bba.R;
 import com.beldara.bba.dial_pad.DialPadActivity;
 import com.beldara.bba.lead.LeadActivity;
+import com.beldara.bba.location.ILocationStateListener;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.splash.PrefManager;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener {
+public class HomeActivity extends BaseActivity implements ILocationStateListener, View.OnClickListener {
 
     LinearLayout lyOpenLead , lyMyLead, lyAccpLead,lydialpad;
     @Override
@@ -99,5 +101,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onConnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed() {
+
     }
 }

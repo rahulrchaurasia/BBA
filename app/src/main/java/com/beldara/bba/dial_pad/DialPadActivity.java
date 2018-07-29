@@ -60,6 +60,8 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
 
         initialise_widget();
         setListner();
+
+        Utility.clearDirIfExist(DialPadActivity.this);
     }
 
     private void initialise_widget() {
@@ -287,6 +289,7 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
                             intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
                             // intent.putExtra("AUDIO_FILE",audiofile);
                             startActivity(intent);
+                            finish();
 
                         } else {
                             editor.putString(Utility.CALL_STATUS, "YES");
@@ -327,4 +330,18 @@ public class DialPadActivity extends BaseActivity implements View.OnClickListene
         editor.putString(Utility.CALL_STATUS, "NO");
         editor.commit();
     }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode==Constants.REQ_CODE_DIAL)
+//        {
+//            if(audioRecorder != null)
+//            {
+//                audioRecorder = null;
+//            }
+//        }
+//    }
 }

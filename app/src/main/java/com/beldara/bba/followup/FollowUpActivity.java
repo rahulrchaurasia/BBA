@@ -1,10 +1,14 @@
 package com.beldara.bba.followup;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,11 +27,15 @@ import com.beldara.bba.core.IResponseSubcriber;
 import com.beldara.bba.core.controller.register.RegisterController;
 import com.beldara.bba.core.model.LeadEntity;
 import com.beldara.bba.core.model.StatusEntity;
+import com.beldara.bba.core.model.SupplierEntity;
 import com.beldara.bba.core.requestmodel.FollowupRequestEntity;
 import com.beldara.bba.core.response.DocumentResponse;
 import com.beldara.bba.core.response.FollowUpSaveResponse;
 import com.beldara.bba.core.response.StatusResponse;
+import com.beldara.bba.core.response.SupplierListResponse;
 import com.beldara.bba.dashboard.HomeActivity;
+import com.beldara.bba.location.ILocationStateListener;
+import com.beldara.bba.location.LocationTracker;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.splash.PrefManager;
 import com.beldara.bba.utility.AudioRecorder;
@@ -46,7 +54,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 
-public class FollowUpActivity extends BaseActivity implements View.OnClickListener, IResponseSubcriber {
+public class FollowUpActivity extends BaseActivity implements View.OnClickListener, IResponseSubcriber, ILocationStateListener {
 
     ArrayList<String> arrayStatus;
     ArrayAdapter<String> statusAdapter;
@@ -54,24 +62,28 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     EditText etSupplierName, etSupplierMobile, etCompanyName, etemailID, etDate, etRemark;
-    Spinner spStatus ;
+    Spinner spStatus;
     Button btnSubmit;
     List<StatusEntity> lstStatus;
     LinkedHashMap<String, String> map = new LinkedHashMap<>();
     LeadEntity leadEntity;
+    String SELLER_ID = "0";
 
     FollowupRequestEntity followupRequestEntity;
     PrefManager prefManager;
     String FOLLOWUP_ID = "0";
     AudioRecorder audioRecorder;
     File audioFile;
+    SupplierEntity supplierEntity;
 
-
+    LocationTracker locationTracker;
+    Location location;
     HashMap<String, Integer> body;
     MultipartBody.Part part;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +109,18 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
 
 
         }
+
+        //region init location
+        locationTracker = new LocationTracker(FollowUpActivity.this);
+        //location callback method
+        locationTracker.setLocationStateListener(this);
+
+        //GoogleApiClient initialisation and location update
+        locationTracker.init();
+
+        //GoogleApiclient connect
+        locationTracker.onResume();
+        //endregion
         showDialog("Please Wait...");
 
         new RegisterController(FollowUpActivity.this).getStatusMaster(FollowUpActivity.this);
@@ -153,6 +177,7 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
         return dateSelected;
 
     }
+
     protected View.OnClickListener datePickerDialog = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -192,7 +217,7 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
                             if (extras.getParcelable("LEAD_DETAILS") != null) {
                                 leadEntity = extras.getParcelable("LEAD_DETAILS");
 
-
+                                SELLER_ID = leadEntity.getSellerid();
                                 etSupplierName.setText(leadEntity.getSellerName());
                                 etCompanyName.setText(leadEntity.getCompany());
                                 etSupplierMobile.setText(leadEntity.getMobile());
@@ -202,41 +227,99 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
 
                             }
                         }
+
+                        else if (getIntent().hasExtra("DIAL_NUMBER")) {
+
+                            etCompanyName.setEnabled(true);
+                            String dialMobNo = extras.getString("DIAL_NUMBER", "");
+
+                            if (!dialMobNo.equals("")) {
+
+                                showDialog();
+                                new RegisterController(FollowUpActivity.this).getSupplierList(dialMobNo, this);
+                            }
+
+                        }
                     }
 
                     //endregion
                 }
             }
-        }
-      else  if (response instanceof FollowUpSaveResponse) {
+        } else if (response instanceof FollowUpSaveResponse) {
             cancelDialog();
             if (response.getStatusId() == 1) {
 
-                FOLLOWUP_ID    = ((FollowUpSaveResponse) response).getResult().getFid();
-              //  Toast.makeText(FollowUpActivity.this,((FollowUpSaveResponse) response).getMessage(),Toast.LENGTH_SHORT).show();
+                FOLLOWUP_ID = ((FollowUpSaveResponse) response).getResult().getFid();
+                //  Toast.makeText(FollowUpActivity.this,((FollowUpSaveResponse) response).getMessage(),Toast.LENGTH_SHORT).show();
 
-                if(audioFile != null) {
+                if (audioFile != null) {
                     savAudioToDb();
-                }
-               else {
+                } else {
+                    Toast.makeText(FollowUpActivity.this, ((DocumentResponse) response).getMessage(), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(FollowUpActivity.this, HomeActivity.class));
                     finish();
                 }
 
 
             }
-        }
-
-        else if (response instanceof DocumentResponse) {
+        } else if (response instanceof DocumentResponse) {
+            cancelDialog();
             if (response.getStatusId() == 1) {
 
-                if(audioFile != null) {
+                if (audioFile != null) {
                     boolean isDeleted = Utility.deleteAudioFile(audioFile.getAbsolutePath());
                 }
-                Toast.makeText(FollowUpActivity.this,((DocumentResponse) response).getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(FollowUpActivity.this, ((DocumentResponse) response).getMessage(), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(FollowUpActivity.this, HomeActivity.class));
+
+                this.finish();
 
             }
-        }
+        } else if (response instanceof SupplierListResponse) {
+            cancelDialog();
+            if (response.getStatusId() == 1) {
+
+                List<SupplierEntity> supplierLst = ((SupplierListResponse) response).getResult();
+
+                supplierEntity = supplierLst.get(0);
+                SELLER_ID = supplierEntity.getSellerid();
+                etSupplierName.setText(supplierEntity.getName());
+                etCompanyName.setText(supplierEntity.getCompany());
+                etSupplierMobile.setText(supplierEntity.getMobile());
+                etemailID.setText(supplierEntity.getEmail());
+                etDate.setText("");
+            }else{
+                showAlert("Not Registered Client...");
+            }
+
+    }
+
+}
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(FollowUpActivity.this);
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS is settings");
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
     }
 
     @Override
@@ -253,78 +336,88 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
 
             Utility.hideKeyBoard(view, FollowUpActivity.this);
 
-            // region Validation
+            if (!Utility.checkGpsStatus(getApplicationContext())) {
 
-            if (etCompanyName.getText().toString().matches("")) {
-                etCompanyName.setError("Enter Company  Name");
-                etCompanyName.requestFocus();
-                return;
+                showSettingsAlert();
             }
-            if (etSupplierName.getText().toString().matches("")) {
-                etSupplierName.setError("Enter Supplier Name");
-                etSupplierName.requestFocus();
-                return;
-            }
+            //Gps On
+           else {
 
-            if (etSupplierMobile.getText().toString().matches("")) {
-                etSupplierMobile.setError("Enter Mobile");
-                etSupplierMobile.requestFocus();
-                return;
-            }
-            if (etSupplierMobile.getText().toString().trim().length() < 10) {
-                etSupplierMobile.setError("Enter Valid Mobile");
-                etSupplierMobile.requestFocus();
-                return;
-            }
-            if (etemailID.getText().toString().matches("")) {
-                etemailID.setError("Enter Email ID");
-                etemailID.requestFocus();
-                return;
-            }
-            if (!isValideEmailID(etemailID)) {
-                etemailID.setError("Enter Valid Email ID");
-                etemailID.requestFocus();
-                return;
-            }
+                //  region Validation
 
+                if (etCompanyName.getText().toString().matches("")) {
+                    etCompanyName.setError("Enter Company  Name");
+                    etCompanyName.requestFocus();
+                    return;
+                }
+                if (etSupplierName.getText().toString().matches("")) {
+                    etSupplierName.setError("Enter Supplier Name");
+                    etSupplierName.requestFocus();
+                    return;
+                }
 
-            if (spStatus.getSelectedItem().toString().toUpperCase().equals("SELECT")) {
-                Snackbar.make(etSupplierMobile, "Select the Status", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (etDate.getText().toString().matches("")) {
-                Snackbar.make(etSupplierMobile, "Select the Date", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
+                if (etSupplierMobile.getText().toString().matches("")) {
+                    etSupplierMobile.setError("Enter Mobile");
+                    etSupplierMobile.requestFocus();
+                    return;
+                }
+                if (etSupplierMobile.getText().toString().trim().length() < 10) {
+                    etSupplierMobile.setError("Enter Valid Mobile");
+                    etSupplierMobile.requestFocus();
+                    return;
+                }
+                if (etemailID.getText().toString().matches("")) {
+                    etemailID.setError("Enter Email ID");
+                    etemailID.requestFocus();
+                    return;
+                }
+                if (!isValideEmailID(etemailID)) {
+                    etemailID.setError("Enter Valid Email ID");
+                    etemailID.requestFocus();
+                    return;
+                }
 
 
-            if (etRemark.getText().toString().matches("")) {
-                etRemark.setError("Enter Remark");
-                etRemark.requestFocus();
-                return;
+                if (spStatus.getSelectedItem().toString().toUpperCase().equals("SELECT")) {
+                    Snackbar.make(etSupplierMobile, "Select the Status", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (etDate.getText().toString().matches("")) {
+                    Snackbar.make(etSupplierMobile, "Select the Date", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (etRemark.getText().toString().matches("")) {
+                    etRemark.setError("Enter Remark");
+                    etRemark.requestFocus();
+                    return;
+                }
+
+                followupRequestEntity = new FollowupRequestEntity();
+                String strDate = "";
+                try {
+                    strDate = getDateFormat(etDate.getText().toString());
+                } catch (Exception ex) {
+                    strDate = "";
+                }
+
+                String id = map.get(spStatus.getSelectedItem().toString());
+                followupRequestEntity.setUser_id(prefManager.getUserID());
+                followupRequestEntity.setStatus_id(id);
+                followupRequestEntity.setSeller_id(SELLER_ID);
+                followupRequestEntity.setRemark(etRemark.getText().toString());
+                followupRequestEntity.setFollowup_date(strDate);
+                followupRequestEntity.setIp("");
+                followupRequestEntity.setLang("" + location.getLongitude());
+                followupRequestEntity.setLat("" + location.getLatitude());
+
+                //endregion
+
+                showDialog();
+                new RegisterController(FollowUpActivity.this).saveFollowUp(followupRequestEntity, this);
             }
-
-            followupRequestEntity = new FollowupRequestEntity();
-            String strDate = "";
-            try {
-                strDate = getDateFormat(etDate.getText().toString());
-            } catch (Exception ex) {
-                strDate = "";
-            }
-
-            String id = map.get(spStatus.getSelectedItem().toString());
-            followupRequestEntity.setUser_id(prefManager.getUserID());
-            followupRequestEntity.setStatus_id(id);
-            followupRequestEntity.setSeller_id(leadEntity.getSellerid());
-            followupRequestEntity.setRemark(etRemark.getText().toString());
-            followupRequestEntity.setFollowup_date(strDate);
-            followupRequestEntity.setIp("");
-            followupRequestEntity.setLang("0");
-            followupRequestEntity.setLat("0");
-
-            showDialog();
-            new RegisterController(FollowUpActivity.this).saveFollowUp( followupRequestEntity ,this);
         }
     }
 
@@ -339,6 +432,7 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         sharedPreferences = getSharedPreferences(Constants.SHAREDPREFERENCE_TITLE, MODE_PRIVATE);
@@ -357,9 +451,24 @@ public class FollowUpActivity extends BaseActivity implements View.OnClickListen
 
             part = Utility.getMultipartAudio(audioFile);
             //  body = Utility.getBody(FollowUpSupplierActivity.this, Integer.valueOf(userID), 0, 0, 1, 0);
-            body = Utility.getBody(FollowUpActivity.this, Integer.valueOf(prefManager.getUserID()), Integer.valueOf(leadEntity.getSellerid()),  1, Integer.valueOf(FOLLOWUP_ID));
+            body = Utility.getBody(FollowUpActivity.this, Integer.valueOf(prefManager.getUserID()), Integer.valueOf(SELLER_ID), 1, Integer.valueOf(FOLLOWUP_ID));
 
             new RegisterController(this).uploadDocuments(part, body, FollowUpActivity.this);
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location tmplocation) {
+        location = locationTracker.mLocation;
+    }
+
+    @Override
+    public void onConnected() {
+        location = locationTracker.mLocation;
+    }
+
+    @Override
+    public void onConnectionFailed() {
+        location = null;
     }
 }

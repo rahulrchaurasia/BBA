@@ -13,6 +13,7 @@ import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.core.response.RegisterResponse;
 import com.beldara.bba.core.response.StatusResponse;
+import com.beldara.bba.core.response.SupplierListResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +66,9 @@ public class RegisterRequestBuilder extends RetroRequestBuilder {
 
         @POST("/kapi.php?m=FI")
         Call<FollowUpSaveResponse> saveFollowup(@Body FollowupRequestEntity followupRequestEntity);
+
+        @POST("/kapi.php?m=VLS")
+        Call<SupplierListResponse> getSupplierList(@Body HashMap<String, String> body);
 
         //////////// Upload File //////////////
         @Multipart

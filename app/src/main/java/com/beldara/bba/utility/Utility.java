@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -30,7 +31,7 @@ import okhttp3.RequestBody;
  * Created by IN-RB on 04-06-2018.
  */
 
-public class  Utility {
+public class Utility {
 
     public static String ID = "ID";      //User id for all field (Main ID)
     public static String EMAIL_ID = "EMAIL_ID";
@@ -47,11 +48,9 @@ public class  Utility {
     public static long TIME = 4 * 60000;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static boolean checkPermission(final Context context)
-    {
+    public static boolean checkPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
-        if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
-        {
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
@@ -79,22 +78,17 @@ public class  Utility {
         }
     }
 
-    public static boolean checkInternetStatus(Context context) {
-      /*  ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        if (conMgr.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
-                conMgr.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING ||
-                conMgr.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTING ||
-                conMgr.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTED) {
-            return true;
-        }*/
-        final ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnected()) {
-            // notify user you are online
-            return true;
+    public static boolean checkGpsStatus(Context context) {
+        PackageManager pm = context.getPackageManager();
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean hasGps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+        boolean gps_enabled = false;
+        if (hasGps) {
+            gps_enabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         }
-        return false;
+
+        return gps_enabled;
     }
 
 
@@ -103,8 +97,6 @@ public class  Utility {
         MultipartBody.Part imgFile = MultipartBody.Part.createFormData("docfile", file.getName(), imgBody);
         return imgFile;
     }
-
-
 
 
     public static File createDirIfNotExists() {
@@ -118,6 +110,22 @@ public class  Utility {
             }
         }
         return file;
+    }
+
+
+    public static void clearDirIfExist(Context context) {
+
+        File dir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + context.getApplicationContext().getPackageName()
+                + "/beldara/Audios");
+
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                new File(dir, children[i]).delete();
+            }
+        }
     }
 
     public static boolean deleteAudioFile(String filePath) {
@@ -134,6 +142,7 @@ public class  Utility {
         String currentDateandTime = sdf.format(new Date());
         return currentDateandTime;
     }
+
     public static void hideKeyBoard(View view, Context context) {
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -147,7 +156,7 @@ public class  Utility {
 
 
         body.put("userid", userid);
-        body.put("sellerid",vendorid );
+        body.put("sellerid", vendorid);
 
         body.put("ctype", ctype);
         body.put("fid", fid);

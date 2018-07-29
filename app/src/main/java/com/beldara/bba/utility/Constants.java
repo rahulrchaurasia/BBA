@@ -16,6 +16,11 @@ public class Constants {
     public static int PAYMENT_SUCCESS = 1;
     public static int PAYMENT_FAILURE = 0;
     public static String PAYMENT_AMOUNT = "10.05";
+    public static final int LOCATION_INTERVAL = 10000;    //10000;
+    public static final int FASTEST_LOCATION_INTERVAL = 5000;
+    public static int REQ_CODE_LEAD = 2;
+    public static int REQ_CODE_DIAL = 3;
+
 
     public static void hideKeyBoard(View view, Context context) {
         if (view != null) {

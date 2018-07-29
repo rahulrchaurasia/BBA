@@ -14,6 +14,7 @@ import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.core.response.RegisterResponse;
 import com.beldara.bba.core.response.StatusResponse;
+import com.beldara.bba.core.response.SupplierListResponse;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -417,6 +418,49 @@ public class RegisterController implements IRegister {
             @Override
             public void onFailure(Call<DocumentResponse> call, Throwable t) {
 
+                if (t instanceof ConnectException) {
+                    iResponseSubcriber.OnFailure(t);
+                } else if (t instanceof SocketTimeoutException) {
+                    iResponseSubcriber.OnFailure(new RuntimeException("Check your internet connection"));
+                } else if (t instanceof UnknownHostException) {
+                    iResponseSubcriber.OnFailure(new RuntimeException("Check your internet connection"));
+                } else if (t instanceof NumberFormatException) {
+                    iResponseSubcriber.OnFailure(new RuntimeException("Unexpected server response"));
+                } else {
+                    iResponseSubcriber.OnFailure(new RuntimeException(t.getMessage()));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getSupplierList(String mobile, final IResponseSubcriber iResponseSubcriber) {
+
+        HashMap<String, String> body = new HashMap<>();
+
+        body.put("mobile", mobile);
+        registerQuotesNetworkService.getSupplierList(body).enqueue(new Callback<SupplierListResponse>() {
+            @Override
+            public void onResponse(Call<SupplierListResponse> call, Response<SupplierListResponse> response) {
+                if (response.body() != null) {
+
+                    //callback of data
+                    if (response.body().getStatusId() == 1) {
+
+                        iResponseSubcriber.OnSuccess(response.body(), response.body().getMessage());
+                    } else {
+                        //failure
+                        iResponseSubcriber.OnSuccess(response.body(), response.body().getMessage());
+                    }
+
+                } else {
+                    //failure
+                    iResponseSubcriber.OnFailure(new RuntimeException("Enable to reach server, Try again later"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SupplierListResponse> call, Throwable t) {
                 if (t instanceof ConnectException) {
                     iResponseSubcriber.OnFailure(t);
                 } else if (t instanceof SocketTimeoutException) {

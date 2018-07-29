@@ -33,6 +33,7 @@ import com.beldara.bba.core.response.CommonResponse;
 import com.beldara.bba.core.response.LeadResponse;
 import com.beldara.bba.core.response.LoginResponse;
 import com.beldara.bba.dashboard.HomeActivity;
+import com.beldara.bba.dial_pad.DialPadActivity;
 import com.beldara.bba.followup.FollowUpActivity;
 import com.beldara.bba.login.loginActivity;
 import com.beldara.bba.splash.PrefManager;
@@ -77,6 +78,7 @@ public class LeadActivity extends BaseActivity implements IResponseSubcriber {
 
         }
         initialize();
+        Utility.clearDirIfExist(LeadActivity.this);
         showDialog("Please Wait...");
 
         if (LeadType.equals("M")) {
@@ -199,7 +201,7 @@ public class LeadActivity extends BaseActivity implements IResponseSubcriber {
                             intent.putExtra("LEAD_DETAILS", leadEntity);
                             intent.putExtra("AUDIO_PATH", audioRecorder.getFilePath());
 
-                            startActivity(intent);
+                            startActivityForResult(intent,Constants.REQ_CODE_LEAD);
 
                         } else {
                              editor.putString(Utility.CALL_STATUS, "YES");
@@ -213,9 +215,9 @@ public class LeadActivity extends BaseActivity implements IResponseSubcriber {
             };
             telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             Intent intent = new Intent(Intent.ACTION_CALL);
-          //  intent.setData(Uri.parse("tel:" + mbNumber));
+            intent.setData(Uri.parse("tel:" + mbNumber));
 
-             intent.setData(Uri.parse("tel:" + "9224624999"));
+            // intent.setData(Uri.parse("tel:" + "9224624999"));
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -241,7 +243,7 @@ public class LeadActivity extends BaseActivity implements IResponseSubcriber {
     public void redirectfollowup(LeadEntity leadEntity) {
         Intent intent = new Intent(LeadActivity.this, FollowUpActivity.class);
         intent.putExtra("LEAD_DETAILS", leadEntity);
-        startActivity(intent);
+        startActivityForResult(intent,Constants.REQ_CODE_LEAD);
 
     }
 
@@ -255,6 +257,16 @@ public class LeadActivity extends BaseActivity implements IResponseSubcriber {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-
+        if(requestCode==Constants.REQ_CODE_LEAD)
+        {
+            if(audioRecorder != null)
+            {
+                audioRecorder = null;
+            }
+        }
+    }
 }
